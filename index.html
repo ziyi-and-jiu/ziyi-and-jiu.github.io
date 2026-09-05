@@ -1520,10 +1520,10 @@ html>body{padding:0}</style>
     opacity: 0.5;
   }
   #zj-guest-overlap .thread-couple.is-active { stroke-width: 1.8; opacity: 0.95; }
-  #zj-guest-overlap .couple-clover { fill: var(--gold-rose); opacity: 0.8; }
-  #zj-guest-overlap .couple-clover.is-active { opacity: 1; }
+  #zj-guest-overlap .couple-heart { fill: var(--gold-rose); opacity: 0.8; }
+  #zj-guest-overlap .couple-heart.is-active { opacity: 1; }
   #zj-guest-overlap .thread-couple.is-hosts { stroke-width: 1.6; opacity: 0.85; }
-  #zj-guest-overlap .couple-clover.is-hosts { fill: var(--gold); opacity: 1; }
+  #zj-guest-overlap .couple-heart.is-hosts { fill: var(--gold); opacity: 1; }
 
   /* ── legend ── */
   #zj-guest-overlap .legend {
@@ -1552,6 +1552,9 @@ html>body{padding:0}</style>
     vertical-align: middle;
   }
   #zj-guest-overlap .legend-line.couple { background: var(--gold-rose); }
+  #zj-guest-overlap .legend-couple-swatch { display: inline-flex; align-items: center; gap: 3px; }
+  #zj-guest-overlap .legend-couple-swatch .legend-line { width: 10px; }
+  #zj-guest-overlap .legend-couple-swatch svg { display: block; width: 10px; height: 10px; fill: var(--gold-rose); }
   #zj-guest-overlap .legend-line.overlap { background: var(--gold-deep); }
 
   /* ── one orchestrated arrival ── */
@@ -1611,6 +1614,9 @@ html>body{padding:0}</style>
     </defs>
     <symbol id="zj-clover" viewBox="0 0 24 24">
       <path d="M6 6A6 6 0 0 1 18 6A6 6 0 0 1 18 18A6 6 0 0 1 6 18A6 6 0 0 1 6 6Z"></path>
+    </symbol>
+    <symbol id="zj-heart" viewBox="0 0 24 24">
+      <path d="M12 20.8C12 20.8 3.2 14.6 3.2 8.9C3.2 5.9 5.6 3.6 8.5 3.6C10.2 3.6 11.4 4.5 12 5.6C12.6 4.5 13.8 3.6 15.5 3.6C18.4 3.6 20.8 5.9 20.8 8.9C20.8 14.6 12 20.8 12 20.8Z"></path>
     </symbol>
   </svg>
 
@@ -1710,7 +1716,7 @@ html>body{padding:0}</style>
 
   <div class="legend" aria-label="Legend">
     <span><span class="legend-clovers" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#zj-clover"></use></svg><svg viewBox="0 0 24 24"><use href="#zj-clover"></use></svg><svg viewBox="0 0 24 24"><use href="#zj-clover"></use></svg></span><span id="legend-group">朋友圈分支</span></span>
-    <span><span class="legend-line couple" aria-hidden="true"></span><span id="legend-couple">伴侣连线</span></span>
+    <span><span class="legend-couple-swatch" aria-hidden="true"><span class="legend-line couple"></span><svg viewBox="0 0 24 24"><use href="#zj-heart"></use></svg><span class="legend-line couple"></span></span><span id="legend-couple">伴侣连线</span></span>
     <span><span class="legend-line overlap" aria-hidden="true"></span><span id="legend-overlap">所选重合标签</span></span>
     <span id="legend-once">每位宾客仅出现一次</span>
   </div>
@@ -1921,6 +1927,8 @@ html>body{padding:0}</style>
     selected = key;
     const definition = overlapDefs.find(item => item[0] === selected);
     root.style.setProperty('--stone',stoneByKind[definition[3]]);
+    root.querySelector('#selected-anchor-port use')
+      .setAttribute('href',selected === 'couples' ? '#zj-heart' : '#zj-clover');
     root.querySelectorAll('[data-overlap]').forEach(control => {
       control.setAttribute('aria-pressed',control.dataset.overlap === selected ? 'true' : 'false');
     });
@@ -1981,15 +1989,16 @@ html>body{padding:0}</style>
     const flag = `${active ? ' is-active' : ''}${hosts ? ' is-hosts' : ''}`;
     const line = addPath(`thread-couple${flag}`,start,end,0.5);
     const middle = line.getPointAtLength(line.getTotalLength()/2);
-    const size = hosts ? 20 : (active ? 15 : 12);
-    const clover = document.createElementNS(SVGNS,'use');
-    clover.setAttribute('href','#zj-clover');
-    clover.setAttribute('class',`couple-clover${flag}`);
-    clover.setAttribute('x',middle.x - size/2);
-    clover.setAttribute('y',middle.y - size/2);
-    clover.setAttribute('width',size);
-    clover.setAttribute('height',size);
-    svg.appendChild(clover);
+    /* a heart carries less ink than the clover did, so nudge each size up */
+    const size = hosts ? 22 : (active ? 16.5 : 13.5);
+    const heart = document.createElementNS(SVGNS,'use');
+    heart.setAttribute('href','#zj-heart');
+    heart.setAttribute('class',`couple-heart${flag}`);
+    heart.setAttribute('x',middle.x - size/2);
+    heart.setAttribute('y',middle.y - size/2);
+    heart.setAttribute('width',size);
+    heart.setAttribute('height',size);
+    svg.appendChild(heart);
   }
 
   function drawThreads() {
