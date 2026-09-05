@@ -6,4 +6,4 @@ Single-page invitation + guest map for Ziyi & Jiu's wedding after party
 - `index.html` — the whole page. No build step, no dependencies to install.
 - `.nojekyll` — tells GitHub Pages to serve the files as-is.
 
-Deploy notes live in `../DEPLOY-GITHUB-PAGES.md` (outside this repo).
+Deployed at https://ziyi-and-jiu.github.io/ — deploy notes live in `../DEPLOY-GITHUB-PAGES.md` (outside this repo).
